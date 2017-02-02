@@ -12,6 +12,7 @@ err = db.Put("user", "matt")
 
 var v string
 err = db.Get("user", &v)
+fmt.Println("got", v)
 ```
 
 ## Installation
