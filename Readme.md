@@ -2,6 +2,18 @@
 
 Simple configuration storage for your CLIs. Places configuration in the right place depending on your OS.
 
+## Example
+
+```go
+db, err := store.New("app")
+defer db.Close()
+
+err = db.Put("user", "matt")
+
+var v string
+err = db.Get("user", &v)
+```
+
 ## Installation
 
 ```
