@@ -10,6 +10,14 @@ import (
 	"github.com/rapidloop/skv"
 )
 
+// ErrNotFound is returned when the key supplied to a Get or Delete
+// method does not exist in the database.
+var ErrNotFound = skv.ErrNotFound
+
+// ErrBadValue is returned when the value supplied to the Put method
+// is nil.
+var ErrBadValue = skv.ErrBadValue
+
 // Store struct
 type Store struct {
 	Name string
@@ -18,13 +26,13 @@ type Store struct {
 
 // New config
 func New(name string) (db *skv.KVStore, err error) {
-	p, err := Path(name)
+	p, err := getPath(name)
 	if err != nil {
 		return db, err
 	}
 
 	// create the directory
-	err = os.MkdirAll(p, os.ModePerm)
+	err = os.MkdirAll(p, 0755)
 	if err != nil {
 		return db, err
 	}
@@ -32,8 +40,8 @@ func New(name string) (db *skv.KVStore, err error) {
 	return skv.Open(path.Join(p, "config.db"))
 }
 
-// Path to the storage
-func Path(paths ...string) (p string, err error) {
+// get the path to the storage
+func getPath(paths ...string) (p string, err error) {
 	home, err := homedir.Dir()
 	if err != nil {
 		return p, err
